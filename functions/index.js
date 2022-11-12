@@ -7,11 +7,11 @@ const { postRouter } = require("./src/routes/post.route");
 const { admin } = require("./src/services/firebase.service");
 const path = require("path");
 const cookieParser = require("cookie-parser");
-const expressSession = require("express-session");
 const { validateFirebaseIdToken } = require("./src/middlewares/loggin.middleware");
 
 const app = express();
 app.use(cors());
+app.use(cookieParser);
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "static")));
 
