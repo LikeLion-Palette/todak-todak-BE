@@ -1,3 +1,4 @@
+const { logger } = require("firebase-functions");
 const { createPost, getPostsList } = require("../services/post.service");
 
 /**
@@ -12,7 +13,7 @@ const get = async (req, res, next) => {
     const postsList = await getPostsList();
     res.send({ posts: postsList });
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message);
     next(err);
   }
 };
@@ -29,7 +30,7 @@ const create = async (req, res, next) => {
     const createdPostId = await createPost(req.body);
     res.send({ created_post_id: createdPostId });
   } catch (err) {
-    console.error(err.message);
+    logger.error(err.message);
     next(err);
   }
 };
