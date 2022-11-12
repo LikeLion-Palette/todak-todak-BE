@@ -3,11 +3,13 @@ const express = require("express");
 const cors = require("cors");
 const { handleErrors } = require("./src/middlewares/errorHandler.middleware");
 const { testRouter } = require("./src/routes/test.route");
+const { postRouter } = require("./src/routes/post.route");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
+app.use("/post", postRouter);
 app.use("/check-api-stats", testRouter);
 
 app.get("/", (req, res) => {
