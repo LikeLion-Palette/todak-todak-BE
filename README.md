@@ -23,6 +23,10 @@ Pallete의 팀 프로젝트 '토닥토닥'을 위한 Express.js 서버입니다.
 
 ### Express.js Data Flow
 
+> `/check-api-stats`, `/` 를 제외한 다른 모든 경로는 로그인 세션 토큰이 있어야 접근할 수 있습니다.
+
+> 로그인 세션 토큰 유효성은 `validateFirebaseIdToken` 미들웨어에서 확인합니다.
+
 1. 요청이 들어온다.
 2. `index.js`에서 순서대로 middleware 통과
 3. `index.js`에서 일치하는 엔드포인트 찾음
@@ -35,9 +39,9 @@ Pallete의 팀 프로젝트 '토닥토닥'을 위한 Express.js 서버입니다.
    - create 명령일 경우 `model` 클래스를 활용해 인스턴스를 생성하고, `model`의 `getData()` 메서드로 객체를 받음. 모델의 생성자에서는 데이터 유효성 검증
 8. `service`에서의 상호작용 결과를 `controller`가 다시 받아 적절한 `respond` 전송
 
-> `firebase.service.js`는 Firebase와의 연동을 위한 코드가 담겨있으며, 대부분의 `service`에서 공동으로 사용함
+> `firebase.config.js`는 Firebase와의 연동을 위한 코드가 담겨있으며, 대부분의 `service`에서 공동으로 사용함
 
-> `configs`에는 Firebase 연동을 위한 환경변수 로드 등 환경설정용 코드가 포함됨
+> `serviceAccount.config.js`에는 Firebase 연동을 위한 환경변수 로드 등 환경설정용 코드가 포함됨
 
 > `constants`에는 `tagsList`, `subjectList` 등 모델의 유효성 검증을 위해 미리 정해진 카테고리 리스트 등을 선언함
 

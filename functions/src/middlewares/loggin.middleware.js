@@ -1,12 +1,5 @@
 const { logger } = require("firebase-functions");
-const { admin } = require("../services/firebase.service");
-
-const errMsg = [
-  "No Firebase ID token was passed as a Bearer token in the Authorization header.",
-  "Make sure you authorize your request by providing the following HTTP header:",
-  "Authorization: Bearer <Firebase ID Token>",
-  'or by passing a "__session" cookie.',
-];
+const { admin } = require("../configs/firebase.config");
 
 /**
  * Firebase ID Token 유효성 검증하는 middleware
@@ -21,38 +14,17 @@ const errMsg = [
  * @param {import("express").NextFunction} next
  */
 const validateFirebaseIdToken = async (req, res, next) => {
-  logger.log("Firebase ID Token 유효성 검증중");
-
-  if (
-    (!req.headers.authorization || !req.headers.authorization.startsWith("Bearer ")) &&
-    !(req.cookies && req.cookies.__session)
-  ) {
-    logger.error(...errMsg);
-    res.status(403).send(["Unauthorized", ...errMsg].join(" "));
-    return;
-  }
-
-  let idToken;
-  if (req.headers.authorization && req.headers.authorization.startsWith("Bearer ")) {
-    idToken = req.headers.authorization.split("Bearer ")[1];
-  } else if (req.cookies) {
-    logger.log("'__session' 쿠키 확인됨");
-    idToken = req.cookies.__session;
-  } else {
-    res.status(403).send("Unauthorized");
-    return;
-  }
+  const token = req.headers.authorization.split(" ")[1];
 
   try {
-    const decodedToken = await admin.auth().verifyIdToken(idToken);
-    logger.log("ID Token decoded", decodedToken);
-    req.user = decodedToken;
-    next();
-    return;
+    const decodeValue = await admin.auth().verifyIdToken(token);
+    if (decodeValue) {
+      console.log(decodeValue);
+      return next();
+    }
+    return res.status(403).json({ message: "Unauthorized" });
   } catch (e) {
-    logger.error("ID Token 유효성 검증 통과 못함: ", e);
-    res.status(403).send("Unauthorized");
-    return;
+    return res.status(500).json({ message: "Internal Error" });
   }
 };
 

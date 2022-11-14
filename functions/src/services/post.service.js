@@ -1,5 +1,5 @@
 const { Post } = require("../models/post.model");
-const { firestore } = require("./firebase.service");
+const { firestore } = require("../configs/firebase.config");
 
 const getPostsList = async () => {
   const respose = await firestore
